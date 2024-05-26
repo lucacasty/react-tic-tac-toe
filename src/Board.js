@@ -16,8 +16,8 @@ function Board({ xIsNext, squares, onPlay }) {
     ];
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
+      if (squares[a].value && squares[a].value === squares[b].value && squares[a].value === squares[c].value) {
+        return squares[a].value;
       }
     }
     return null;
@@ -31,16 +31,17 @@ function Board({ xIsNext, squares, onPlay }) {
 
   const handleClick = (i) => {
 
-    if (squares[i] || calculateWinner(squares)) {
+    if (squares[i].value || calculateWinner(squares)) {
       return;
     }
 
+    debugger;
     const nextSquares = squares.slice();
     if(xIsNext) {
-      nextSquares[i] = "X";
+      nextSquares[i].value = "X";
     }
     else {
-      nextSquares[i] = "O";
+      nextSquares[i].value = "O";
     }
     onPlay(nextSquares);
   }
@@ -57,7 +58,7 @@ function Board({ xIsNext, squares, onPlay }) {
   const renderSquare = (square) => {
     return (
       <>
-        <Square key={`square-${square}`} value={squares[square]} onSquareClick={() => handleClick(square)} />
+        <Square key={`square-${square}`} value={squares[square].value} winner={squares[square].winner} onSquareClick={() => handleClick(square)} />
       </>
     )
   }

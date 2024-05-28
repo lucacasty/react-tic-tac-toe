@@ -1,4 +1,4 @@
-function Square({value, onSquareClick, winner}) {
+function Square({value, winner, onSquareClick}) {
 
   const getBackground = () => {
     if(winner) {

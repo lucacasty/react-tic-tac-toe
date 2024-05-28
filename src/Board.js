@@ -1,27 +1,8 @@
 
 import Square from './Square';
+import { useState } from 'react';
 
-function Board({ xIsNext, squares, onPlay }) {
-
-  const calculateWinner = (squares) => {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6]
-    ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (squares[a].value && squares[a].value === squares[b].value && squares[a].value === squares[c].value) {
-        return squares[a].value;
-      }
-    }
-    return null;
-  }
+function Board({ xIsNext, squares, onPlay, winnerIndex, status}) {
 
   const board = [
     [ 0, 1, 2 ],
@@ -30,35 +11,39 @@ function Board({ xIsNext, squares, onPlay }) {
    ];
 
   const handleClick = (i) => {
-
-    if (squares[i].value || calculateWinner(squares)) {
+    console.log('inside')
+    if (squares[i]) {
       return;
     }
-
-    debugger;
+    
     const nextSquares = squares.slice();
     if(xIsNext) {
-      nextSquares[i].value = "X";
+      nextSquares[i] = "X";
     }
     else {
-      nextSquares[i].value = "O";
+      nextSquares[i] = "O";
     }
     onPlay(nextSquares);
+    // calculateWinner(squares);
   }
 
-  const winner = calculateWinner(squares);
-  console.log(winner);
-  let status;
-  if (winner) {
-    status = "Winner: " + winner;
-  } else {
-    status = "Next player: " + (xIsNext ? "X" : "O");
-  }
+  // const winner = calculateWinner(squares);
+  // console.log(winner);
+  // let status;
+  // if (winner) {
+  //   status = "Winner: " + winner;
+  // } else {
+  //   status = "Next player: " + (xIsNext ? "X" : "O");
+  // }
 
   const renderSquare = (square) => {
+    let winnerVal = false;
+    if(winnerIndex.includes(square)) {
+      winnerVal = true;
+    }
     return (
       <>
-        <Square key={`square-${square}`} value={squares[square].value} winner={squares[square].winner} onSquareClick={() => handleClick(square)} />
+        <Square key={`square-${square}`} value={squares[square]} winner={winnerVal} onSquareClick={() => handleClick(square)} />
       </>
     )
   }
@@ -67,7 +52,7 @@ function Board({ xIsNext, squares, onPlay }) {
     <>
       <div className="status">{status}</div>
       {board.map((row, i) => (
-        <div key={i} className="board-row">
+        <div key={i} className="board-row" vaore={status}>
           {row.map(square => renderSquare(square))}
         </div> 
       ))}
